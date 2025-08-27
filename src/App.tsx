@@ -16,6 +16,11 @@ import BishopInfo from './pages/BishopInfo';
 import Contact from './pages/Contact';
 import Login from './pages/admin/Login';
 import Dashboard from './pages/admin/Dashboard';
+import ProtectedRoute from './components/admin/ProtectedRoute';
+import AdminLayout from './components/admin/AdminLayout';
+import ArticlesAdmin from './pages/admin/ArticlesAdmin';
+import CategoriesAdmin from './pages/admin/CategoriesAdmin';
+import SettingsAdmin from './pages/admin/SettingsAdmin';
 
 function App() {
   return (
@@ -36,11 +41,20 @@ function App() {
             {/* Admin Routes */}
             <Route path="/admin/login" element={<Login />} />
             <Route path="/admin/*" element={
-              <div className="flex">
-                <div className="flex-1">
-                  <Dashboard />
-                </div>
-              </div>
+              <ProtectedRoute>
+                <AdminLayout>
+                  <Routes>
+                    <Route path="/" element={<Dashboard />} />
+                    <Route path="/articles/*" element={<ArticlesAdmin />} />
+                    <Route path="/categories/*" element={<CategoriesAdmin />} />
+                    <Route path="/settings" element={
+                      <ProtectedRoute requiredRole="admin">
+                        <SettingsAdmin />
+                      </ProtectedRoute>
+                    } />
+                  </Routes>
+                </AdminLayout>
+              </ProtectedRoute>
             } />
             
             {/* Public Routes */}
